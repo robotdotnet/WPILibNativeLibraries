@@ -1,0 +1,26 @@
+version: '{branch}-{build}'
+pull_requests:
+  do_not_increment_build_number: true
+skip_branch_with_pr: true
+branches:  		
+  only:		
+  - master
+nuget:
+  disable_publish_on_pr: true
+build_script:
+- ps: >-
+    If (($env:APPVEYOR_REPO_BRANCH -eq "master") -and (!$env:APPVEYOR_PULL_REQUEST_NUMBER)) {
+      $revision = @{ $true = $env:APPVEYOR_BUILD_NUMBER; $false = 1 }[$env:APPVEYOR_BUILD_NUMBER -ne $NULL];
+      $revision = "-Pversion=\"{0:D4}\"" -f [convert]::ToInt32($revision, 10)
+
+      ./gradlew build $revision
+    }
+
+deploy:
+- provider: NuGet
+  api_key:
+    secure: f4XB8xaNhhhgmXZrsv5Yh+JjxgnAXOfBJtbUgPB623n4Z2t/gXcC7fCUg36DK69k
+  on:
+    branch: master
+    appveyor_repo_tag: true
+    

@@ -1,0 +1,71 @@
+import org.gradle.internal.os.OperatingSystem
+
+plugins {
+    id 'net.ltgt.errorprone' version '0.0.8'
+    id 'edu.wpi.first.wpilib.versioning.WPILibVersioningPlugin' version '1.4'
+    id "com.ullink.nuget" version "2.15"
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+}
+
+def packageVersion = project.hasProperty('version') ? project.version : '1.0'
+
+apply from: "locations.gradle"
+
+apply from: "properties.gradle"
+
+apply from: "dependencies.gradle"
+
+defineWpiUtilProperties()
+defineHALProperties()
+defineNetworkTablesProperties()
+defineCsCoreProperties()
+
+nugetSpec {
+    nuspec = [
+        metadata: [
+            id: 'FRC.WPILibNativeLibraries',
+            title: 'FRC WPILibNativeLibraries',
+            authors: 'RobotDotNet',
+            owners: 'RobotDotNet',
+            description: 'Contains the roboRIO libraries to run WPILib in C#',
+            tags: 'WPILib FIRST FRC RoboRIO',
+            copyright: '2016-2017',
+            projectUrl: 'https://github.com/robotdotnet/WPILib/WPILibNativeLibraries',
+            version: packageVersion
+        ],
+        files: [
+            { file (src: wpiUtilSharedLib, target: 'content\\wpinative') },
+            { file (src: halSharedLib, target: 'content\\wpinative') },
+            { file (src: netSharedLib, target: 'content\\wpinative') },
+            { file (src: cscoreSharedLib, target: 'content\\wpinative') },
+            { file (src: "${rootDir}/libOpenCvSharpExtern.so", target: 'content\\wpinative') },
+            { file (src: "${cscoreLocation}/*.so.3.1".replace('/', '\\'), target: 'content\\wpinative') }
+        ]
+    ]
+}
+
+// Empty task for build so that zips will be
+// built when running ./gradlew build
+//task build
+
+nugetPack.dependsOn unzipWpiUtil
+nugetPack.dependsOn unzipHAL
+nugetPack.dependsOn unzipNetworkTables
+nugetPack.dependsOn unzipCsCore
+build.dependsOn nugetPack
+
+//apply from: "releases.gradle"
+
+clean {
+    delete buildDir
+    delete releaseDir
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.0'
+}

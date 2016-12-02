@@ -1,8 +1,3 @@
-param (
-  [switch]$release = $false,
-  [switch]$beta = $false
-)
-
 If (Test-Path Env:APPVEYOR_REPO_TAG_NAME) {
   $version = ($env:APPVEYOR_REPO_TAG_NAME).Substring(1)  
   if (($env:APPVEYOR_REPO_TAG_NAME).Contains("-") -eq $false) {

@@ -11,7 +11,9 @@ allprojects {
     }
 }
 
-def packageVersion =  project.version != 'unspecified' ? project.version : '1.0'
+def buildVersion =  project.hasProperty('buildVersion') ? project.buildVersion : '1.0.0'
+def buildType = project.hasProperty('buildType') ? project.buildType : ''
+def buildNumber = project.hasProperty('buildNumber') ? project.buildNumber : ''
 
 apply from: "locations.gradle"
 
@@ -35,7 +37,7 @@ nugetSpec {
             tags: 'WPILib FIRST FRC RoboRIO',
             copyright: '2016-2017',
             projectUrl: 'https://github.com/robotdotnet/WPILib/WPILibNativeLibraries',
-            version: packageVersion
+            version: buildVersion + buildType + buildNumber
         ],
         files: [
             { file (src: wpiUtilSharedLib, target: 'content\\wpinative') },

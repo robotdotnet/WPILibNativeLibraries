@@ -11,7 +11,7 @@ allprojects {
     }
 }
 
-def packageVersion = project.hasProperty('version') ? project.version : '1.0'
+def packageVersion =  project.version != 'unspecified' ? project.version : '1.0'
 
 apply from: "locations.gradle"
 

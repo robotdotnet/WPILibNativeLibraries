@@ -162,6 +162,7 @@ nbactions.xml
 
 # Compiled Dynamic libraries
 *.so
+!libOpenCvSharpExtern.so
 *.dylib
 *.dll
 

@@ -23,3 +23,9 @@ If ($release) {
 echo $revision
 
 ./gradlew build $revision
+
+If (($env:APPVEYOR_REPO_BRANCH -eq "master") -and (!$env:APPVEYOR_PULL_REQUEST_NUMBER)) {
+  if ($env:APPVEYOR) {
+    Get-ChildItem .\build\distributions\*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }
+  }
+}

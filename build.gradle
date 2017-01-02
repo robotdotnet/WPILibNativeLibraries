@@ -1,7 +1,7 @@
 import org.gradle.internal.os.OperatingSystem
 
 plugins {
-    id 'edu.wpi.first.wpilib.versioning.WPILibVersioningPlugin' version '1.4'
+    id 'edu.wpi.first.wpilib.versioning.WPILibVersioningPlugin' version '1.6'
     id "com.ullink.nuget" version "2.15"
 }
 

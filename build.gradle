@@ -11,6 +11,12 @@ allprojects {
     }
 }
 
+if (!hasProperty('releaseType')) {
+    WPILibVersion {
+        releaseType = 'dev'
+    }
+}
+
 def buildVersion =  project.hasProperty('buildVersion') ? project.buildVersion : '1.0.0'
 def buildType = project.hasProperty('buildType') ? project.buildType : ''
 def buildNumber = project.hasProperty('buildNumber') ? project.buildNumber : ''

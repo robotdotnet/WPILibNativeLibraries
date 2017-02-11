@@ -43,9 +43,18 @@ nugetSpec {
             tags: 'WPILib FIRST FRC RoboRIO',
             copyright: '2016-2017',
             projectUrl: 'https://github.com/robotdotnet/WPILib/WPILibNativeLibraries',
-            version: buildVersion + buildType + buildNumber
+            version: buildVersion + buildType + buildNumber,
+            contentFiles: [
+                { files (include: '**/wpinative/*.*', buildAction: 'None', copyToOutput: 'true')}
+            ],
         ],
         files: [
+            { file (src: wpiUtilSharedLib, target: 'contentfiles\\any\\any\\wpinative') },
+            { file (src: halSharedLib, target: 'contentfiles\\any\\any\\wpinative') },
+            { file (src: netSharedLib, target: 'contentfiles\\any\\any\\wpinative') },
+            { file (src: cscoreSharedLib, target: 'contentfiles\\any\\any\\wpinative') },
+            { file (src: "${rootDir}/temp/cvsharp/arm/build/libs/openCvSharpExtern/shared/libOpenCvSharpExtern.so", target: 'contentfiles\\any\\any\\wpinative') },
+            { file (src: "${cscoreLocation}/*.so.3.1".replace('/', '\\'), target: 'contentfiles\\any\\any\\wpinative') },
             { file (src: wpiUtilSharedLib, target: 'content\\wpinative') },
             { file (src: halSharedLib, target: 'content\\wpinative') },
             { file (src: netSharedLib, target: 'content\\wpinative') },

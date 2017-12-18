@@ -29,8 +29,9 @@ apply from: "dependencies.gradle"
 
 defineWpiUtilProperties()
 defineHALProperties()
-defineNetworkTablesProperties()
+//defineNetworkTablesProperties()
 defineCsCoreProperties()
+defineCvProperties()
 
 nugetSpec {
     nuspec = [
@@ -51,17 +52,17 @@ nugetSpec {
         files: [
             { file (src: wpiUtilSharedLib, target: 'contentfiles\\any\\any\\wpinative') },
             { file (src: halSharedLib, target: 'contentfiles\\any\\any\\wpinative') },
-            { file (src: netSharedLib, target: 'contentfiles\\any\\any\\wpinative') },
+            //{ file (src: netSharedLib, target: 'contentfiles\\any\\any\\wpinative') },
             { file (src: cscoreSharedLib, target: 'contentfiles\\any\\any\\wpinative') },
-            { file (src: "${rootDir}/temp/cvsharp/arm/build/libs/openCvSharpExtern/shared/libOpenCvSharpExtern.so", target: 'contentfiles\\any\\any\\wpinative') },
-            { file (src: "${cscoreLocation}/*.so.3.1".replace('/', '\\'), target: 'contentfiles\\any\\any\\wpinative') },
+            { file (src: "${rootDir}/temp/cvsharp/build/libs/openCvSharpExtern/shared/libOpenCvSharpExtern.so", target: 'contentfiles\\any\\any\\wpinative') },
+            { file (src: "${cvSharedLocation}/*.so.3.2".replace('/', '\\'), target: 'contentfiles\\any\\any\\wpinative') },
             { file (src: "${rootDir}/ImageSettings.json", target: 'contentfiles\\any\\any\\wpinative') },
             { file (src: wpiUtilSharedLib, target: 'content\\wpinative') },
             { file (src: halSharedLib, target: 'content\\wpinative') },
-            { file (src: netSharedLib, target: 'content\\wpinative') },
+            //{ file (src: netSharedLib, target: 'content\\wpinative') },
             { file (src: cscoreSharedLib, target: 'content\\wpinative') },
             { file (src: "${rootDir}/temp/cvsharp/arm/build/libs/openCvSharpExtern/shared/libOpenCvSharpExtern.so", target: 'content\\wpinative') },
-            { file (src: "${cscoreLocation}/*.so.3.1".replace('/', '\\'), target: 'content\\wpinative') }
+            { file (src: "${cvSharedLocation}/*.so.3.2".replace('/', '\\'), target: 'content\\wpinative') }
         ]
     ]
 }
@@ -72,8 +73,9 @@ nugetSpec {
 
 nugetPack.dependsOn unzipWpiUtil
 nugetPack.dependsOn unzipHAL
-nugetPack.dependsOn unzipNetworkTables
+//nugetPack.dependsOn unzipNetworkTables
 nugetPack.dependsOn unzipCsCore
+nugetPack.dependsOn unzipCv
 build.dependsOn nugetPack
 
 //apply from: "releases.gradle"

@@ -7,7 +7,7 @@ task downloadWpiUtil() {
     def armWpiUtil
 
     doFirst {
-        def armWpiUtilDependency = project.dependencies.create("edu.wpi.first.wpilib:wpiutil:+:arm@zip")
+        def armWpiUtilDependency = project.dependencies.create("edu.wpi.first.wpiutil:wpiutil-cpp:+:linuxathena@zip")
         def armWpiUtilConfig = project.configurations.detachedConfiguration(armWpiUtilDependency)
         armWpiUtilConfig.setTransitive(false)
         armWpiUtil = armWpiUtilConfig.files[0].canonicalFile
@@ -37,8 +37,8 @@ task unzipWpiUtil(type: Copy) {
 ext.defineWpiUtilProperties = {
     ext.wpiUtil = wpiUtilUnzipLocation
     ext.wpiUtilInclude = "$wpiUtilUnzipLocation/include"
-    ext.wpiUtilLibArmLocation = "$wpiUtilUnzipLocation/Linux/arm"
-    ext.wpiUtilSharedLib = "$wpiUtilLibArmLocation/libwpiutil.so"
+    ext.wpiUtilLibArmLocation = "$wpiUtilUnzipLocation/Linux/athena"
+    ext.wpiUtilSharedLib = "$wpiUtilLibArmLocation/shared/libwpiutil.so"
     ext.wpiUtilSharedLibDebug = "$wpiUtilLibArmLocation/libwpiutil.so.debug"
     ext.addWpiUtilLibraryLinks = { compileTask, linker, targetPlatform ->
         compileTask.dependsOn project(':').unzipWpiUtil
@@ -60,10 +60,10 @@ task downloadHAL() {
     def libZip = file("$depFolder/hal.zip")
     outputs.file(libZip)
     def armHal
-    
+
 
     doFirst {
-        def armHALDependency = project.dependencies.create("edu.wpi.first.wpilib:hal:+@zip")
+        def armHALDependency = project.dependencies.create("edu.wpi.first.hal:hal:+:linuxathena@zip")
         def armHALConfig = project.configurations.detachedConfiguration(armHALDependency)
         armHALConfig.setTransitive(false)
         armHal = armHALConfig.files[0].canonicalFile
@@ -83,7 +83,7 @@ task unzipHAL(type: Copy) {
     description = 'Unzips the hal maven dependency so that the include files and libraries can be used'
     group = 'WPILib'
     dependsOn downloadHAL
-    
+
     from zipTree(downloadHAL.outputs.files.singleFile)
     into halUnzipLocation
 }
@@ -91,15 +91,15 @@ task unzipHAL(type: Copy) {
 ext.defineHALProperties = {
     ext.hal = halUnzipLocation
     ext.halInclude = "$halUnzipLocation/include"
-    ext.halLocation = "$halUnzipLocation/lib"
-    ext.halSharedLib = "$halLocation/libHALAthena.so"
-  
+    ext.halLocation = "$halUnzipLocation/linux/athena/shared"
+    ext.halSharedLib = "$halLocation/libwpiHal.so"
+
     ext.addHalLibraryLinks = { compileTask, linker, targetPlatform ->
         compileTask.dependsOn project(':').unzipHAL
         String architecture = targetPlatform.architecture
         if (architecture.contains('arm')) {
             // Grab all the shared libraries and link them
-            linker.args halSharedLib      
+            linker.args halSharedLib
             linker.args "$halLocation/libnilibraries.so"
 
             def libraryPath = halLocation
@@ -118,7 +118,7 @@ task downloadNetworkTables() {
     def armNetTables
 
     doFirst {
-        def armNtDependency = project.dependencies.create('edu.wpi.first.wpilib.networktables.cpp:NetworkTables:+:arm@zip')
+        def armNtDependency = project.dependencies.create('edu.wpi.first.ntcore:ntcore-cpp:+:linuxathena@zip')
         def armConfig = project.configurations.detachedConfiguration(armNtDependency)
         armConfig.setTransitive(false)
         armNetTables = armConfig.files[0].canonicalFile
@@ -127,7 +127,7 @@ task downloadNetworkTables() {
     doLast {
         copy {
             from armNetTables
-            rename 'NetworkTables(.+)', 'ntcore.zip'
+            rename 'ntcore(.+)', 'ntcore.zip'
             into depFolder
         }
     }
@@ -149,8 +149,8 @@ task unzipNetworkTables(type: Copy) {
 ext.defineNetworkTablesProperties = {
     ext.netTables = netTablesUnzipLocation
     ext.netTablesInclude = "$netTablesUnzipLocation/include"
-    ext.netLibArmLocation = "$netTablesUnzipLocation/Linux/arm"
-    ext.netSharedLib = "$netLibArmLocation/libntcore.so"
+    ext.netLibArmLocation = "$netTablesUnzipLocation/Linux/athena"
+    ext.netSharedLib = "$netLibArmLocation/shared/libntcore.so"
     ext.netSharedLibDebug = "$netLibArmLocation/libntcore.so.debug"
 
     ext.addNetworkTablesLibraryLinks = { compileTask, linker, targetPlatform ->
@@ -174,7 +174,7 @@ task downloadWpilib() {
     def libZip = file("$depFolder/athena-wpilibc.zip")
     outputs.file(libZip)
     def armWPILib
-    
+
 
     doFirst {
         def armWpiLibDependency = project.dependencies.create("edu.wpi.first.wpilibc:athena:+@zip")
@@ -197,7 +197,7 @@ task unzipWpilib(type: Copy) {
     description = 'Unzips the wpilib maven dependency so that the include files and libraries can be used'
     group = 'WPILib'
     dependsOn downloadWpilib
-    
+
     from zipTree(downloadWpilib.outputs.files.singleFile)
     into wpilibUnzipLocation
 }
@@ -207,7 +207,7 @@ ext.defineWpiLibProperties = {
     ext.wpilibInclude = "$wpilibUnzipLocation/include"
     ext.wpilibLocation = "$wpilibUnzipLocation/lib"
     ext.wpilibSharedLib = "$wpilibLocation/libwpilibc.so"
-    
+
     ext.addWpilibLibraryLinks = { compileTask, linker, targetPlatform ->
         compileTask.dependsOn project(':').unzipWpilib
         String architecture = targetPlatform.architecture
@@ -232,10 +232,10 @@ task downloadCsCore() {
     def libZip = file("$depFolder/cscore.zip")
     outputs.file(libZip)
     def armCsCore
-    
+
 
     doFirst {
-        def armCsDependency = project.dependencies.create("edu.wpi.cscore.cpp:cscore:+:athena-uberzip@zip")
+        def armCsDependency = project.dependencies.create("edu.wpi.first.cscore:cscore-cpp:+:linuxathena@zip")
         def armCsConfig = project.configurations.detachedConfiguration(armCsDependency)
         armCsConfig.setTransitive(false)
         armCsCore = armCsConfig.files[0].canonicalFile
@@ -255,7 +255,7 @@ task unzipCsCore(type: Copy) {
     description = 'Unzips the cscore maven dependency so that the include files and libraries can be used'
     group = 'WPILib'
     dependsOn downloadCsCore
-    
+
     from zipTree(downloadCsCore.outputs.files.singleFile)
     into cscoreUnzipLocation
 }
@@ -263,11 +263,66 @@ task unzipCsCore(type: Copy) {
 ext.defineCsCoreProperties = {
     ext.cscore = cscoreUnzipLocation
     ext.cscoreInclude = "$cscoreUnzipLocation/include"
-    ext.cscoreLocation = "$cscoreUnzipLocation/lib"
-    ext.opencvSharedLib = "$cscoreLocation/libopencv.so"
+    ext.cscoreLocation = "$cscoreUnzipLocation/linux/athena/shared"
 	ext.cscoreSharedLib = "$cscoreLocation/libcscore.so"
-    
+
     ext.addCsCoreLibraryLinks = { compileTask, linker, targetPlatform ->
+        compileTask.dependsOn project(':').unzipCsCore
+        String architecture = targetPlatform.architecture
+        if (architecture.contains('arm')) {
+            // Grab all the shared libraries and link them
+            linker.args opencvSharedLib
+			linker.args cscoreSharedLib
+
+            def libraryPath = cscoreLocation
+
+            linker.args << '-L' + libraryPath
+        }
+    }
+}
+
+def cvUnzipLocation = "$buildDir/opencv"
+
+task downloadCv() {
+    description = 'Downloads the C++ ARM CV maven dependency.'
+
+    group = 'WPILib'
+    def depFolder = "$buildDir/dependencies"
+    def libZip = file("$depFolder/cv.zip")
+    outputs.file(libZip)
+    def armCsCore
+
+
+    doFirst {
+        def armCsDependency = project.dependencies.create("org.opencv:opencv-cpp:+:linuxathena@zip")
+        def armCsConfig = project.configurations.detachedConfiguration(armCsDependency)
+        armCsConfig.setTransitive(false)
+        armCsCore = armCsConfig.files[0].canonicalFile
+    }
+
+    doLast {
+        copy {
+            from armCsCore
+            rename 'opencv(.+)', 'cv.zip'
+            into depFolder
+        }
+    }
+}
+
+// Create a task that will unzip the cscore files into a temporary build directory
+task unzipCv(type: Copy) {
+    description = 'Unzips the cv maven dependency so that the include files and libraries can be used'
+    group = 'WPILib'
+    dependsOn downloadCv
+
+    from zipTree(downloadCv.outputs.files.singleFile)
+    into cvUnzipLocation
+}
+
+ext.defineCvProperties = {
+    ext.cvSharedLocation = "$cvUnzipLocation/linux/athena/shared"
+
+    ext.addCvLibraryLinks = { compileTask, linker, targetPlatform ->
         compileTask.dependsOn project(':').unzipCsCore
         String architecture = targetPlatform.architecture
         if (architecture.contains('arm')) {

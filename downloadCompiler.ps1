@@ -13,7 +13,7 @@ if ((Test-Path $localFolder) -eq $false) {
 $compilerName = "compiler"
 
 echo "Downloading Compiler"
-(New-Object System.Net.WebClient).DownloadFile("http://first.wpi.edu/FRC/roborio/toolchains/FRC-2017-Windows-Toolchain-4.9.3.zip", "$localFolder\$compilerName.zip")
+(New-Object System.Net.WebClient).DownloadFile("http://first.wpi.edu/FRC/roborio/toolchains/FRC-2018-Windows-Toolchain-5.5.zip", "$localFolder\$compilerName.zip")
 
 # unzip everything
 Add-Type -assembly "system.io.compression.filesystem"

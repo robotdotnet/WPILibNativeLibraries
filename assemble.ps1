@@ -1,5 +1,5 @@
 If (Test-Path Env:APPVEYOR_REPO_TAG_NAME) {
-  $version = ($env:APPVEYOR_REPO_TAG_NAME).Substring(1)  
+  $version = ($env:APPVEYOR_REPO_TAG_NAME).Substring(1)
   if (($env:APPVEYOR_REPO_TAG_NAME).Contains("-") -eq $false) {
     #Building a Full Release
      $type = ""
@@ -21,7 +21,7 @@ If (Test-Path Env:APPVEYOR_REPO_TAG_NAME) {
 
 # Taken from psake https://github.com/psake/psake
 
-<#  
+<#
 .SYNOPSIS
   This is a helper function that runs a scriptblock and checks the PS variable $lastexitcode
   to see if an error occcured. If an error is detected then an exception is thrown.
@@ -30,7 +30,7 @@ If (Test-Path Env:APPVEYOR_REPO_TAG_NAME) {
 .EXAMPLE
   exec { svn info $repository_trunk } "Error executing SVN. Please verify SVN command-line client is installed"
 #>
-function Exec  
+function Exec
 {
     [CmdletBinding()]
     param(
@@ -54,15 +54,15 @@ if ($env:APPVEYOR) {
 ./downloadCompiler.ps1
 
 echo "Cloning FRC-OpenCvSharp repo"
-git clone -q --branch=master https://github.com/robotdotnet/FRC-OpenCvSharp.git "$localFolder\cvsharp"
+git clone -q --branch=build2018 https://github.com/robotdotnet/FRC-OpenCvSharp.git "$localFolder\cvsharp"
 
 $startLocation = Get-Location
 
 Set-Location "$localFolder\cvsharp"
 
-$cvBuild = "$localFolder\cvsharp\gradlew.bat" 
+$cvBuild = "$localFolder\cvsharp\gradlew.bat"
 
-./gradlew :arm:build
+./gradlew build
 
 Set-Location $startLocation
 

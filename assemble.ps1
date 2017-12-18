@@ -74,6 +74,8 @@ echo $buildNumber
 
 ./gradlew build -PbuildVersion="$version" -PbuildType="$type" -PbuildNumber="$buildNumber"
 
+if($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode )  }
+
 If (($env:APPVEYOR_REPO_BRANCH -eq "master") -and (!$env:APPVEYOR_PULL_REQUEST_NUMBER)) {
   if ($env:APPVEYOR) {
     Get-ChildItem .\build\distributions\*.nupkg | % { Push-AppveyorArtifact $_.FullName -FileName $_.Name }

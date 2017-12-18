@@ -61,7 +61,7 @@ nugetSpec {
             { file (src: halSharedLib, target: 'content\\wpinative') },
             //{ file (src: netSharedLib, target: 'content\\wpinative') },
             { file (src: cscoreSharedLib, target: 'content\\wpinative') },
-            { file (src: "${rootDir}/temp/cvsharp/arm/build/libs/openCvSharpExtern/shared/libOpenCvSharpExtern.so", target: 'content\\wpinative') },
+            { file (src: "${rootDir}/temp/cvsharp/build/libs/openCvSharpExtern/shared/libOpenCvSharpExtern.so", target: 'content\\wpinative') },
             { file (src: "${cvSharedLocation}/*.so.3.2".replace('/', '\\'), target: 'content\\wpinative') }
         ]
     ]
